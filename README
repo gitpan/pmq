@@ -1,4 +1,4 @@
-pmq version 0.1.1
+pmq version 0.1.2
 
 Report the installed version of a Perl module, or list all modules
 with their versions.  Examples:
@@ -14,7 +14,9 @@ and after snapshots and check nothing has broken or been downgraded.
 
 * Changes since the last release
 
-Packaged better with pod documentation and a Makefile.PL.
+Corrected some misleading documentation.  All of pmq's methods for
+finding a module's version number involve executing some code from
+that module.
 
 * Installation
 
@@ -32,4 +34,4 @@ This program is in the public domain, which means there are no
 copyright restrictions and you can do what you want with it.  Contact:
 ed@membled.com or <http://membled.com/work/perl/pmq/>.
 
--- Ed Avis, ed@membled.com, 2002-10-28
+-- Ed Avis, ed@membled.com, 2002-10-29

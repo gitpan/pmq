@@ -1,3 +1,14 @@
+2002-10-29 11:45  ed
+
+	* Makefile.PL, README, pmq: Version 0.1.2.
+
+2002-10-29 11:38  ed
+
+	* pmq: It turns out that ExtUtils::MM_Unix's parse_version() method
+	does not parse at all, but evalates the version-setting line.  This
+	means that the command line and documentation of pmq is misleading.
+	 I've renamed the method 'parse' to 'eval'.
+
 2002-10-28 17:40  ed
 
 	* README: Updated with release notes for 0.1.1.

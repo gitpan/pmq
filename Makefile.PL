@@ -4,6 +4,6 @@ use ExtUtils::MakeMaker;
 WriteMakefile
   (
    'NAME'    => 'pmq',
-   VERSION   => '0.1.1',
+   VERSION   => '0.1.2',
    EXE_FILES => [ 'pmq' ],
   );

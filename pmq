@@ -10,7 +10,7 @@ pmq - Report the installed version of Perl modules.
 
 C<pmq [-H | -h] [--method (parse | load | fork)] module...>
 
-C<pmq [--method (parse | load | fork)] --all>
+C<pmq [--method (eval | load | fork)] --all>
 
 =head1 DESCRIPTION
 
@@ -19,12 +19,14 @@ on whether they are installed, and if so with what version number.
 With B<--all>, all modules on the system are listed.
 
 There are three methods to find out the status of a module.  The
-fastest and default is 'parse' which examines the moduleE<39>s program
-text for a line setting $VERSION.  The method 'load' is more thorough,
-it tries to load the module in question and then asks for the value of
-$VERSION.  Because some modules can have strange side-effects when
-loaded, the slowest method 'fork' loads each module in a separate
-process.  Be warned that both 'load' and 'fork' will execute the
+fastest and default is 'eval' which examines the moduleE<39>s program
+text for a line setting $VERSION, and evaluates that one line.  The
+method 'load' is more thorough, it tries to load the whole module and
+then asks for the value of $VERSION.  Because some modules can have
+strange side-effects when loaded, the slowest method 'fork' loads each
+module in a separate process.
+
+Be warned that all methods will execute at least some of the
 moduleE<39>s code, but if you have installed a module into your perl
 search path you probably trust it anyway.
 
@@ -49,7 +51,7 @@ Ed Avis, ed@membled.com
 use strict;
 use Getopt::Long; Getopt::Long::Configure('bundling');
 
-my $VERSION = '0.1.1';
+my $VERSION = '0.1.2';
 
 sub load_module( $ );
 sub load_module_fork( $ );
@@ -67,7 +69,7 @@ Example: $0 Date::Manip
   --with-name, -H    always print the name of modules
   --no-name, -h      never print the name of modules
   --all              list all modules installed
-  --method=parse     look for a VERSION line           (default)
+  --method=eval      evaluate the VERSION line         (default)
   --method=load      actually load each module         (slower)
   --method=fork      load each module in a new process (slowest)
   --help, --version  report information about pmq
@@ -88,7 +90,7 @@ END
 
 my $all = 0; # list all installed modules
 my ($with_name, $no_name) = (0, 0);
-my $method = 'parse';
+my $method = 'eval';
 my ($opt_help, $opt_version) = (0, 0);
 GetOptions
   (
@@ -115,11 +117,18 @@ END
     exit(0);
 }
 
-if ($method ne 'parse' and $method ne 'load' and $method ne 'fork') {
+if ($method eq 'parse') {
+    die
+      "There is currently no method which just parses the module's code.
+The name 'parse' in earlier versions of pmq was misleading.  If you
+are prepared to execute some code from each module, use --method eval
+or leave the method unspecified.\n";
+}
+if ($method ne 'eval' and $method ne 'load' and $method ne 'fork') {
     die "cannot specify two different methods\n";
 }
 my $need_filename = 0;
-if ($method eq 'parse') {
+if ($method eq 'eval') {
     $need_filename = 1;
     require ExtUtils::MakeMaker; import ExtUtils::MakeMaker;
     require ExtUtils::MM_Unix;
@@ -189,7 +198,7 @@ sub print_ver( $$ ) {
     my ($m, $f) = @_;
     print "$m: " if $print_name;
     my $r;
-    if ($method eq 'parse') {
+    if ($method eq 'eval') {
 	if (defined $f) {
 	    $r = parse_version($f);
 	}
