@@ -1,0 +1,35 @@
+pmq version 0.1.1
+
+Report the installed version of a Perl module, or list all modules
+with their versions.  Examples:
+
+% pmq Date::Manip
+% pmq --all
+
+This is intended as an answer to the two FAQs, 'how do I find out what
+version of a module is installed?' and 'how do I list all modules
+installed on a system?'.  It's quite handy for upgrading a whole perl
+installation from one release to another, since you can take before
+and after snapshots and check nothing has broken or been downgraded.
+
+* Changes since the last release
+
+Packaged better with pod documentation and a Makefile.PL.
+
+* Installation
+
+As for Perl modules.
+
+% perl Makefile.PL PREFIX=/usr/local
+(or change /usr/local to your chosen location)
+% make
+(there is no 'make test' for this program)
+% make install
+
+* Copying
+
+This program is in the public domain, which means there are no
+copyright restrictions and you can do what you want with it.  Contact:
+ed@membled.com or <http://membled.com/work/perl/pmq/>.
+
+-- Ed Avis, ed@membled.com, 2002-10-28

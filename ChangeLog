@@ -1,0 +1,35 @@
+2002-10-28 17:40  ed
+
+	* README: Updated with release notes for 0.1.1.
+
+2002-10-28 17:37  ed
+
+	* MANIFEST, MANIFEST.SKIP, Makefile.PL, README, install, mkdist,
+	pmq: Packaged in proper Perl style with a Makefile.PL, pod
+	documentation and (for my use) a mkdist script which checks version
+	numbers.  Also added --help and --version options.
+
+2002-09-06 22:27  ed
+
+	* mkdist: Adding 'mkdist' script to create a distribution directory
+	from the working copy.
+
+2002-09-06 22:12  ed
+
+	* README, install: Added installer (guess_install).
+
+2002-09-06 22:11  ed
+
+	* pmq: Fixed howling bug when looking for a module's filename.	I'm
+	amazed I didn't spot this sooner :-(.
+
+2002-09-06 22:02  ed
+
+	* README, pmq: Grabbed the program called 'pmv' from my bin/
+	directory, tidied it up and added lots of new features, renamed it
+	'pmq' (Perl Module Query, I suppose) and imported into CVS.
+
+2002-09-06 22:02  ed
+
+	* README, pmq: Initial revision
+
