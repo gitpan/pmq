@@ -8,9 +8,9 @@ pmq - Report the installed version of Perl modules.
 
 =head1 SYNOPSIS
 
-C<pmq [-H | -h] [--method (parse | load | fork)] module...>
+C<pmq [-f] [-H | -h] [--method (parse | load | fork)] module...>
 
-C<pmq [--method (eval | load | fork)] --all>
+C<pmq [-f] [--method (eval | load | fork)] --all>
 
 =head1 DESCRIPTION
 
@@ -35,6 +35,9 @@ status if more than one module (or 'all') is specified, but this
 name-printing can be forced on with B<-H> or B<--with-name> and
 suppressed with B<-h> or B<--no-name>.
 
+B<--with-filename> or B<-f> print the filename of the .pm file used
+after the version check result.
+
 B<--help> prints a help message to standard output and B<--version>
 reports on the version number of pmq itself.
 
@@ -46,12 +49,37 @@ L<perl(1)>.
 
 Ed Avis, ed@membled.com
 
+=begin comment
+
+=pod SCRIPT CATEGORIES
+
+CPAN
+
+UNIX : System_administration
+
+=pod OSNAMES
+
+any
+
+=pod README
+
+This tool is intended to be a user-friendly answer to the two FAQs,
+'how do I find what version of a Perl module is installed?' and 'how
+do I list all modules installed on the system?' 
+
+'pmq Date::Manip' will print the version of the Date::Manip module, or
+'(failed)' if the module is not installed, or for some modules which
+donE<39>t carry version information, '(unknown)'. 'pmq --all' will print
+every module found in PerlE<39>s include path with its version.
+
+=end comment
+
 =cut
 
 use strict;
 use Getopt::Long; Getopt::Long::Configure('bundling');
 
-my $VERSION = '0.1.2';
+my $VERSION = '0.1.3';
 
 sub load_module( $ );
 sub load_module_fork( $ );
@@ -66,13 +94,14 @@ or:    $0 OPTIONS --all
 List the version installed of the given Perl modules, or all modules.
 Example: $0 Date::Manip
 
-  --with-name, -H    always print the name of modules
-  --no-name, -h      never print the name of modules
-  --all              list all modules installed
-  --method=eval      evaluate the VERSION line         (default)
-  --method=load      actually load each module         (slower)
-  --method=fork      load each module in a new process (slowest)
-  --help, --version  report information about pmq
+  --with-name, -H     always print the name of modules
+  --no-name, -h       never print the name of modules
+  --with-filename, -f print the filename of the .pm file
+  --all               list all modules installed
+  --method=eval       evaluate the VERSION line         (default)
+  --method=load       actually load each module         (slower)
+  --method=fork       load each module in a new process (slowest)
+  --help, --version   report information about pmq
 
 Report bugs to <ed\@membled.com>.
 END
@@ -88,18 +117,19 @@ END
     }
 }
 
-my $all = 0; # list all installed modules
-my ($with_name, $no_name) = (0, 0);
+my $all = 0;
+my ($with_name, $no_name, $with_filename) = (0, 0, 0);
 my $method = 'eval';
 my ($opt_help, $opt_version) = (0, 0);
 GetOptions
   (
-   'all' => \$all,
-   'with-name|H' => \$with_name,
-   'no-name|h' => \$no_name,
-   'method=s' => \$method,
-   'help' => \$opt_help,
-   'version' => \$opt_version,
+   'all'             => \$all,
+   'with-name|H'     => \$with_name,
+   'no-name|h'       => \$no_name,
+   'with-filename|f' => \$with_filename,
+   'method=s'        => \$method,
+   'help'            => \$opt_help,
+   'version'         => \$opt_version,
   )
   or usage(0);
 
@@ -163,6 +193,9 @@ elsif ($with_name and $no_name) {
 }
 else { die }
 
+my $print_filename; # print the filenames
+$print_filename = $with_filename || 0;
+
 if ($all) {
     all_mods(\&print_ver);
 }
@@ -196,7 +229,7 @@ else {
 #
 sub print_ver( $$ ) {
     my ($m, $f) = @_;
-    print "$m: " if $print_name;
+    print "$m:\t" if $print_name;
     my $r;
     if ($method eq 'eval') {
 	if (defined $f) {
@@ -218,13 +251,16 @@ sub print_ver( $$ ) {
     my ($ok, $more) = @$r;
     if (not $ok) {
 	# Ignore the particular reasons for failure.
-	print "(failed)\n";
+	print '(failed)';
     }
     else {
 	undef $more if defined $more and $more !~ tr/0-9//;
 	$more = '(unknown)' if not defined $more;
-	print "$more\n";
+	print $more;
     }
+
+    print "\t$f" if $print_filename;
+    print "\n";
 }
 
 # Arguments:
