@@ -1,3 +1,17 @@
+2003-01-31 22:26  ed
+
+	* Makefile.PL, mkdist, pmq: Get MakeMaker to look in pmq for the
+	version number rather than storing it in the Makefile.PL.
+
+2003-01-31 21:32  ed
+
+	* README, pmq: Version 0.1.4.
+
+2003-01-31 21:31  ed
+
+	* pmq: Fixed uninitialized value warning when module filename is
+	not found.
+
 2002-11-15 15:34  ed
 
 	* Makefile.PL, README, pmq: Version 0.1.3.

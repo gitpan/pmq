@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # the contents of the Makefile that is written.
 WriteMakefile
   (
-   'NAME'    => 'pmq',
-   VERSION   => '0.1.3',
-   EXE_FILES => [ 'pmq' ],
+   'NAME'       => 'pmq',
+   VERSION_FROM => 'pmq',
+   EXE_FILES    => [ 'pmq' ],
   );
